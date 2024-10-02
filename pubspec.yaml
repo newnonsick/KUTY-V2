@@ -73,7 +73,7 @@ flutter:
   assets:
     - assets/images/Evil_Morty_Profile_Icon.png
     - assets/images/KU_Logo.png
-    - .env
+    # - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

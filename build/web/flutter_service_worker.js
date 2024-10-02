@@ -3,9 +3,9 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "575323958647bdc00f2be74700aab78d",
-"assets/AssetManifest.bin.json": "03807ead2d49a9098b902236619eb8ec",
-"assets/AssetManifest.json": "237a3d9ea2bb3f62470b7c20506b8286",
+const RESOURCES = {"assets/AssetManifest.bin": "9b501d67de7024e3d0fdda6819e5bf3a",
+"assets/AssetManifest.bin.json": "1309cf3c1b188ae7ddaca3400ce32ff0",
+"assets/AssetManifest.json": "7d7f3a28000996a8d7bbfefec8992061",
 "assets/assets/fonts/Fredoka/Fredoka-Bold.ttf": "0ca2ea96737ff1b488509e1c766d1048",
 "assets/assets/fonts/Fredoka/Fredoka-Light.ttf": "dbb6cf04c0bd3bc9752b4b281adb45b1",
 "assets/assets/fonts/Fredoka/Fredoka-Medium.ttf": "d57371b0bc158473e8327aee67e48803",
@@ -30,7 +30,7 @@ const RESOURCES = {"assets/AssetManifest.bin": "575323958647bdc00f2be74700aab78d
 "canvaskit/skwasm.worker.js": "89990e8c92bcb123999aa81f7e203b1c",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "flutter.js": "f393d3c16b631f36852323de8e583132",
-"flutter_bootstrap.js": "835cefea3fc851b35c73b529bf66a17d",
+"flutter_bootstrap.js": "df3c1264aa25b9b42b64be3d082fb18d",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
