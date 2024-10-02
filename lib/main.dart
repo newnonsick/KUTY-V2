@@ -7,11 +7,11 @@ import 'package:ku_ty/screens/myhomepage.dart';
 import 'package:ku_ty/screens/teblet/myhomepage_tablet_layout.dart';
 import 'package:ku_ty/services/authservice.dart';
 import 'package:ku_ty/utils/responsive_layout.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
   Get.put(AuthService());
   runApp(const MyApp());
 }
