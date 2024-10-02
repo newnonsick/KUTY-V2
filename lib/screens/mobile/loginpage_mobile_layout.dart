@@ -206,7 +206,7 @@ class _LoginPageMobileLayoutState extends State<LoginPageMobileLayout> {
                                     final username = _usernameController.text;
                                     final password = _passwordController.text;
                                     final encryptedPassword = encrypt(password);
-                                    await Get.find<AuthService>().login(username, encryptedPassword);
+                                    await AuthService.login(username, encryptedPassword);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

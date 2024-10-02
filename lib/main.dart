@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ku_ty/screens/mobile/loginpage_mobile_layout.dart';
-import 'package:ku_ty/screens/mobile/myhomepage_mobile_layout.dart';
 import 'package:ku_ty/screens/mobile/searchpage_mobile_layout.dart';
 import 'package:ku_ty/screens/myhomepage.dart';
 import 'package:ku_ty/screens/teblet/myhomepage_tablet_layout.dart';
@@ -12,7 +11,7 @@ import 'package:ku_ty/utils/responsive_layout.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await dotenv.load(fileName: ".env");
-  Get.put(AuthService());
+  await AuthService.initialize();
   runApp(const MyApp());
 }
 
@@ -26,42 +25,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = Get.find<AuthService>();
-
     return GetMaterialApp(
-      initialRoute: '/',
       getPages: [
-        GetPage(
-            name: '/',
-            page: () {
-              if (authService.isLoggedIn.value) {
-                return const ResponsiveLayout(
-                    mobile: MyHomePageMobileLayout(),
-                    tablet: MyHomePageTabletLayout());
-              } else {
-                return const ResponsiveLayout(
-                    mobile: LoginPageMobileLayout(),
-                    tablet: MyHomePageTabletLayout());
-              }
-            }),
         GetPage(
             name: '/home',
             page: () {
-              if (authService.isLoggedIn.value) {
-                return const ResponsiveLayout(
-                    mobile: MyHomePageMobileLayout(),
-                    tablet: MyHomePageTabletLayout());
-              } else {
-                return const ResponsiveLayout(
-                    mobile: LoginPageMobileLayout(),
-                    tablet: MyHomePageTabletLayout());
-              }
-            },
-            transition: Transition.fadeIn),
+              return const MyHomepage();
+            }),
         GetPage(
             name: '/search',
             page: () {
-              if (authService.isLoggedIn.value) {
+              if (AuthService.checkIsLoggedIn()) {
                 return const ResponsiveLayout(
                     mobile: SearchPageMobileLayout(),
                     tablet: MyHomePageTabletLayout());

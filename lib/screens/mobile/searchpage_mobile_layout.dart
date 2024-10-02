@@ -32,7 +32,7 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
     if (savedSearches != null) {
       setState(() {
         recentSearch = savedSearches
-            .map((search) => search.split('|'))
+            .map((search) => search.split('<\$ThisIsASpliter\$>'))
             .where((search) => search.length == 2)
             .toList();
       });
@@ -43,7 +43,7 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
   Future<void> _saveRecentSearch() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> formattedSearches =
-        recentSearch.map((search) => '${search[0]}|${search[1]}').toList();
+        recentSearch.map((search) => '${search[0]}<\$ThisIsASpliter\$>${search[1]}').toList();
     prefs.setStringList('recent_searches', formattedSearches);
   }
 
