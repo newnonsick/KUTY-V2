@@ -7,8 +7,11 @@ import 'package:ku_ty/screens/myhomepage.dart';
 import 'package:ku_ty/screens/teblet/myhomepage_tablet_layout.dart';
 import 'package:ku_ty/services/authservice.dart';
 import 'package:ku_ty/utils/responsive_layout.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   Get.put(AuthService());
   runApp(const MyApp());
 }
@@ -44,13 +47,11 @@ class _MyAppState extends State<MyApp> {
         GetPage(
             name: '/home',
             page: () {
-              // Check if user is logged in
               if (authService.isLoggedIn.value) {
                 return const ResponsiveLayout(
                     mobile: MyHomePageMobileLayout(),
                     tablet: MyHomePageTabletLayout());
               } else {
-                // Redirect to Login if not logged in
                 return const ResponsiveLayout(
                     mobile: LoginPageMobileLayout(),
                     tablet: MyHomePageTabletLayout());
@@ -60,13 +61,11 @@ class _MyAppState extends State<MyApp> {
         GetPage(
             name: '/search',
             page: () {
-              // Check if user is logged in
               if (authService.isLoggedIn.value) {
                 return const ResponsiveLayout(
                     mobile: SearchPageMobileLayout(),
                     tablet: MyHomePageTabletLayout());
               } else {
-                // Redirect to Login if not logged in
                 return const ResponsiveLayout(
                     mobile: LoginPageMobileLayout(),
                     tablet: MyHomePageTabletLayout());

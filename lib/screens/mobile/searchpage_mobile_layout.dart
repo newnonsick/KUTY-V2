@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ku_ty/widgets/custom_searchbox.dart';
 
 class SearchPageMobileLayout extends StatefulWidget {
@@ -14,15 +13,71 @@ class SearchPageMobileLayout extends StatefulWidget {
 class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
   TextEditingController controller = TextEditingController();
   String searchResult = '';
-  int searchState =
-      0; // 0: recent search, 1: searching, 2: search result with category, 3: search result without category
+  String searchCategory = '';
+  int searchState = 0;
   FocusNode searchFocusNode = FocusNode();
+  List<List<String>> recentSearch = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentSearch();
+    searchFocusNode.requestFocus();
+  }
+
+  // Load recent searches from SharedPreferences
+  Future<void> _loadRecentSearch() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? savedSearches = prefs.getStringList('recent_searches');
+    if (savedSearches != null) {
+      setState(() {
+        recentSearch = savedSearches
+            .map((search) => search.split('|'))
+            .where((search) => search.length == 2)
+            .toList();
+      });
+    }
+  }
+
+  // Save recent searches to SharedPreferences
+  Future<void> _saveRecentSearch() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> formattedSearches =
+        recentSearch.map((search) => '${search[0]}|${search[1]}').toList();
+    prefs.setStringList('recent_searches', formattedSearches);
+  }
+
+  // Update the recent search list and save it
+  void _addToRecentSearch(String text, String category) {
+    setState(() {
+      // Remove the search if it already exists
+      recentSearch
+          .removeWhere((item) => item[0] == text && item[1] == category);
+      // Add the new search at the start
+      recentSearch.insert(0, [text, category]);
+      // Keep only the last 5 searches
+      if (recentSearch.length > 5) {
+        recentSearch = recentSearch.sublist(0, 5);
+      }
+    });
+    _saveRecentSearch();
+  }
+
+  void _removeFromRecentSearch(String text, String category) {
+    setState(() {
+      recentSearch
+          .removeWhere((item) => item[0] == text && item[1] == category);
+    });
+    _saveRecentSearch();
+  }
 
   void onEditingComplete(String text) {
     setState(() {
       searchResult = text;
-      searchState = 2; //future: change to 3
+      searchCategory = '';
+      searchState = 2;
       FocusScope.of(context).unfocus();
+      _addToRecentSearch(text, '');
     });
   }
 
@@ -46,12 +101,6 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
         searchState = 1;
       }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    searchFocusNode.requestFocus();
   }
 
   @override
@@ -103,14 +152,6 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
   }
 
   Widget _buildRecentSearch() {
-    List<List<String>> recentSearch = [
-      ['Search 1 Search 1 Search 1 Search 1 Search 10', 'Events'],
-      ['Search 2', 'Locations'],
-      ['Search 3', 'Users'],
-      ['Search 4', 'Events'],
-      ['Search 5', 'Locations'],
-    ];
-
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       alignment: Alignment.topLeft,
@@ -118,20 +159,31 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Recent Search',
+            'Recent Searches',
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
           ),
           const SizedBox(height: 10),
-          SizedBox(
-            height: 220,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: recentSearch.length,
-              itemBuilder: (context, index) {
-                return _buildRecentSearchItem(recentSearch[index]);
-              },
-            ),
-          ),
+          recentSearch.isNotEmpty
+              ? SizedBox(
+                  height: 220,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: recentSearch.length,
+                    itemBuilder: (context, index) {
+                      return _buildRecentSearchItem(recentSearch[index]);
+                    },
+                  ),
+                )
+              : Container(
+                margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                child: const Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'You don\'t have any recent searches',
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ),
+              ),
         ],
       ),
     );
@@ -141,15 +193,14 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
     return InkWell(
       onTap: () {
         setState(() {
-          print(recentSearch[0]);
-          print(recentSearch[1]);
-
           searchResult = recentSearch[0];
+          searchCategory = recentSearch[1];
           searchState = 2;
           controller.text = recentSearch[0];
           controller.selection = TextSelection.fromPosition(
             TextPosition(offset: controller.text.length),
           );
+          _addToRecentSearch(recentSearch[0], recentSearch[1]);
         });
       },
       child: Container(
@@ -158,7 +209,7 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
         child: Row(
           children: [
             const Icon(Icons.history, size: 20),
-            const SizedBox(width: 5),
+            const SizedBox(width: 10),
             Expanded(
               child: Row(
                 children: [
@@ -174,15 +225,27 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    'in ${recentSearch[1]}',
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
+                  if (recentSearch[1].isNotEmpty)
+                    Text(
+                      'in ${recentSearch[1]}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.clip,
                     ),
-                    overflow: TextOverflow.clip,
-                  ),
                 ],
+              ),
+            ),
+            const SizedBox(width: 5),
+            GestureDetector(
+              onTap: () {
+                _removeFromRecentSearch(recentSearch[0], recentSearch[1]);
+              },
+              child: const Icon(
+                Icons.close,
+                size: 20,
+                color: Colors.grey,
               ),
             ),
           ],
@@ -198,23 +261,22 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSearchingItem(categoty: 'Events'),
-          _buildSearchingItem(categoty: 'Locations'),
-          _buildSearchingItem(categoty: 'Users'),
+          _buildSearchingItem(category: 'Events'),
+          _buildSearchingItem(category: 'Locations'),
+          _buildSearchingItem(category: 'People'),
         ],
       ),
     );
   }
 
-  Widget _buildSearchingItem({required String categoty}) {
+  Widget _buildSearchingItem({required String category}) {
     return InkWell(
       onTap: () {
         setState(() {
-          print(controller.text);
-          print(categoty);
-
           searchResult = controller.text;
+          searchCategory = category;
           searchState = 2;
+          _addToRecentSearch(searchResult, category);
         });
       },
       child: Container(
@@ -223,7 +285,7 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
         child: Row(
           children: [
             const Icon(Icons.search, size: 20),
-            const SizedBox(width: 5),
+            const SizedBox(width: 10),
             Expanded(
               child: Row(
                 children: [
@@ -239,14 +301,15 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    'in $categoty',
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
+                  if (category.isNotEmpty)
+                    Text(
+                      'in $category',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.clip,
                     ),
-                    overflow: TextOverflow.clip,
-                  ),
                 ],
               ),
             ),
@@ -269,7 +332,10 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Column(
-        children: [Text('Search Result: $searchResult')],
+        children: [
+          Text('Search Result: $searchResult'),
+          Text('Category: ${searchCategory.isEmpty ? 'All' : searchCategory}'),
+        ],
       ),
     );
   }

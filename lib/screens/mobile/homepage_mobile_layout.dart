@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ku_ty/models/event.dart';
 import 'package:ku_ty/models/events.dart';
+import 'package:ku_ty/services/apiservice.dart';
 import 'package:ku_ty/widgets/event_item.dart';
 import 'package:ku_ty/widgets/filter_category.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -111,10 +112,10 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
               const SizedBox(height: 15),
               _buildFilterCatagory(),
               const SizedBox(height: 20),
-              if (filterasEventCategory.isEmpty) _buildNotSelectedCategory(),
-              if (filterasEventCategory.isNotEmpty)
-                _buildSelectedCategory(
-                    selectedCategories: filterasEventCategory),
+              filterasEventCategory.isEmpty
+                  ? _buildNotSelectedCategory()
+                  : _buildSelectedCategory(
+                      selectedCategories: filterasEventCategory),
             ],
           ),
         ),
@@ -198,63 +199,109 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
       {required String title,
       required PageController controller,
       required VoidCallback? onPressed}) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title),
-              IconButton(
-                  icon: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 20,
+    return FutureBuilder(
+        future: ApiService().getData(title == 'กิจกรรมใกล้ฉัน'
+            ? '/events/nearby'
+            : '/events/interested'),
+        builder: (context, data) {
+          if (data.connectionState == ConnectionState.waiting) {
+            //Future: change to ==
+            return Container(
+              //Future: do the rest
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(title),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 20,
+                          ),
+                          onPressed: onPressed)
+                    ],
                   ),
-                  onPressed: onPressed)
-            ],
-          ),
-          const SizedBox(height: 10),
-          Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 0,
-                      blurRadius: 3,
-                      offset: const Offset(0, 3),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.grey[200],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 0,
+                          blurRadius: 3,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                height: 330,
-                child: PageView.builder(
-                    itemBuilder: (context, index) {
-                      Event event = events.events[index];
-                      return EventItem(event: event);
-                    },
-                    controller: controller,
-                    itemCount: 10),
+                    height: 330,
+                  ),
+                ],
               ),
-              Positioned(
-                  bottom: 10,
-                  left: (MediaQuery.of(context).size.width - 230) / 2,
-                  child: SmoothPageIndicator(
-                    controller: controller,
-                    count: 10,
-                    effect: ExpandingDotsEffect(
-                      dotWidth: 10,
-                      dotHeight: 10,
-                      activeDotColor: const Color(0xFF02BC77),
-                      dotColor: Colors.grey[300]!,
-                    ),
-                  ))
-            ],
-          ),
-        ],
-      ),
-    );
+            );
+          } else {
+            return Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(title),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 20,
+                          ),
+                          onPressed: onPressed)
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 0,
+                              blurRadius: 3,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        height: 330,
+                        child: PageView.builder(
+                            itemBuilder: (context, index) {
+                              Event event = events.events[index];
+                              return EventItem(event: event);
+                            },
+                            controller: controller,
+                            itemCount: 10),
+                      ),
+                      Positioned(
+                          bottom: 10,
+                          left: (MediaQuery.of(context).size.width - 230) / 2,
+                          child: SmoothPageIndicator(
+                            controller: controller,
+                            count: 10,
+                            effect: ExpandingDotsEffect(
+                              dotWidth: 10,
+                              dotHeight: 10,
+                              activeDotColor: const Color(0xFF02BC77),
+                              dotColor: Colors.grey[300]!,
+                            ),
+                          ))
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
+        });
   }
 }

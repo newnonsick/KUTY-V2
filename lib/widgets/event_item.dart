@@ -72,6 +72,7 @@ class EventItem extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 65,
@@ -86,25 +87,20 @@ class EventItem extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          FittedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.calendar_today_outlined,
-                                    size: 17),
-                                const SizedBox(width: 5),
-                                Text(
-                                  "${event.getFormattedDate(event.startDate)}, ${event.getFormattedTime(event.startTime)}",
-                                  style: TextStyle(
-                                      color: Colors.grey[500],
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                      FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.calendar_today_outlined, size: 17),
+                            const SizedBox(width: 5),
+                            Text(
+                              "${event.getFormattedDate(event.startDate)}, ${event.getFormattedTime(event.startTime)}",
+                              style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -145,12 +141,14 @@ class EventItem extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "${event.willGoAttendees}/${event.attendeeLimit} Will go . ${event.interestedAttendees} interested",
-                          style: TextStyle(
-                            color: Colors.grey[500],
+                      FittedBox(
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "${event.willGoAttendees}/${event.attendeeLimit} Will go . ${event.interestedAttendees} interested",
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                            ),
                           ),
                         ),
                       )
@@ -158,13 +156,18 @@ class EventItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                SizedBox(
-                  height: 105,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset(
-                      "assets/images/Evil_Morty_Profile_Icon.png",
-                      fit: BoxFit.fill,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 200.0,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.width * 0.25,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.asset(
+                        "assets/images/Evil_Morty_Profile_Icon.png",
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 )
@@ -197,7 +200,9 @@ class EventItem extends StatelessWidget {
               child: Text(
                 "${getCategoryEmoji(categories[index])} ${categories[index]}",
                 style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11),
               ),
             ),
           );
