@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ku_ty/models/event.dart';
 import 'package:ku_ty/models/events.dart';
-import 'package:ku_ty/services/apiservice.dart';
 import 'package:ku_ty/widgets/event_item.dart';
 import 'package:ku_ty/widgets/filter_category.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+// import 'package:ku_ty/services/apiservice.dart';
+// import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePageMobileLayout extends StatefulWidget {
   const HomePageMobileLayout({super.key});
@@ -17,11 +17,12 @@ class HomePageMobileLayout extends StatefulWidget {
 
 class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   final TextEditingController controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   String searchResult = '';
-  List<String> filterasEventCategory = [];
-  final PageController _pageViewController = PageController();
-  final PageController _pageViewController2 = PageController();
+  List<String> filterasEventCategory = ["All"];
   Events events = Events();
+  // final PageController _pageViewController = PageController();
+  // final PageController _pageViewController2 = PageController();
 
   void onSearchComplete(String text) {
     setState(() {
@@ -33,37 +34,43 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
 
   void onSelectCategory(List<String> value) {
     setState(() {
+      _scrollController.jumpTo(0);
       filterasEventCategory = value;
     });
   }
 
-  Widget _buildNotSelectedCategory() {
-    return Column(
-      children: [
-        _buildEventGroup(
-            title: 'กิจกรรมใกล้ฉัน',
-            controller: _pageViewController,
-            onPressed: () {}),
-        const SizedBox(height: 20),
-        _buildEventGroup(
-            title: 'กิจกรรมที่คุณอาจสนใจ',
-            controller: _pageViewController2,
-            onPressed: () {}),
-        const SizedBox(height: 20)
-      ],
-    );
-  }
+  // Widget _buildNotSelectedCategory() {
+  //   return Column(
+  //     children: [
+  //       _buildEventGroup(
+  //           title: 'กิจกรรมใกล้ฉัน',
+  //           controller: _pageViewController,
+  //           onPressed: () {}),
+  //       const SizedBox(height: 20),
+  //       _buildEventGroup(
+  //           title: 'กิจกรรมที่คุณอาจสนใจ',
+  //           controller: _pageViewController2,
+  //           onPressed: () {}),
+  //       const SizedBox(height: 20)
+  //     ],
+  //   );
+  // }
 
   Widget _buildSelectedCategory({required List<String> selectedCategories}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Column(
-        children: [
-          for (Event event in events.getEventsByCategory(selectedCategories))
-            Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                child: EventItem(event: event)),
-        ],
+    List<Event> filteredEvents = events.getEventsByCategory(selectedCategories);
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: filteredEvents.length,
+          itemBuilder: (context, index) {
+            Event event = filteredEvents[index];
+            return Container(
+                margin: const EdgeInsets.only(bottom: 20),
+              child: EventItem(event: event));
+          },
+        ),
       ),
     );
   }
@@ -102,22 +109,32 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
       body: Container(
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildSeachBox(),
-              const SizedBox(height: 15),
-              _buildSelectLocation(),
-              const SizedBox(height: 15),
-              _buildFilterCatagory(),
-              const SizedBox(height: 20),
-              filterasEventCategory.isEmpty
-                  ? _buildNotSelectedCategory()
-                  : _buildSelectedCategory(
-                      selectedCategories: filterasEventCategory),
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildSeachBox(),
+            const SizedBox(height: 15),
+            // _buildSelectLocation(),
+            // const SizedBox(height: 15),
+            _buildFilterCatagory(),
+            const SizedBox(height: 15),
+            _buildFilterNSort(),
+            const SizedBox(height: 20),
+            _buildSelectedCategory(selectedCategories: filterasEventCategory),
+            // Expanded(
+            //   child: SingleChildScrollView(
+            //     controller: _scrollController,
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: <Widget>[
+            //         filterasEventCategory.isEmpty
+            //             ? _buildNotSelectedCategory()
+            //             : _buildSelectedCategory(
+            //                 selectedCategories: filterasEventCategory),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -159,9 +176,13 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
               color: Color(0xFF02BC77),
             ),
             SizedBox(width: 10),
-            Text(
-              'Search',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+            Flexible(
+              child: FittedBox(
+                child: Text(
+                  'Search e.g. Events, People, Locations',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+              ),
             ),
           ],
         ),
@@ -195,113 +216,151 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
     );
   }
 
-  Widget _buildEventGroup(
-      {required String title,
-      required PageController controller,
-      required VoidCallback? onPressed}) {
-    return FutureBuilder(
-        future: ApiService().getData(title == 'กิจกรรมใกล้ฉัน'
-            ? '/events/nearby'
-            : '/events/interested'),
-        builder: (context, data) {
-          if (data.connectionState == ConnectionState.waiting) {
-            //Future: change to ==
-            return Container(
-              //Future: do the rest
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(title),
-                      IconButton(
-                          icon: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          ),
-                          onPressed: onPressed)
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey[200],
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 0,
-                          blurRadius: 3,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    height: 330,
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(title),
-                      IconButton(
-                          icon: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          ),
-                          onPressed: onPressed)
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 0,
-                              blurRadius: 3,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        height: 330,
-                        child: PageView.builder(
-                            itemBuilder: (context, index) {
-                              Event event = events.events[index];
-                              return EventItem(event: event);
-                            },
-                            controller: controller,
-                            itemCount: 10),
-                      ),
-                      Positioned(
-                          bottom: 10,
-                          left: (MediaQuery.of(context).size.width - 230) / 2,
-                          child: SmoothPageIndicator(
-                            controller: controller,
-                            count: 10,
-                            effect: ExpandingDotsEffect(
-                              dotWidth: 10,
-                              dotHeight: 10,
-                              activeDotColor: const Color(0xFF02BC77),
-                              dotColor: Colors.grey[300]!,
-                            ),
-                          ))
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }
-        });
+  Widget _buildFilterNSort() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: () {
+              print('Filter');
+            },
+            child: const Row(
+              children: [
+                Icon(Icons.filter_alt_outlined, size: 20),
+                SizedBox(width: 5),
+                Text('Filter'),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              print('Sort');
+            },
+            child: const Row(
+              children: [
+                Icon(Icons.sort, size: 20),
+                SizedBox(width: 5),
+                Text('Sort'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
+  // Widget _buildEventGroup(
+  //     {required String title,
+  //     required PageController controller,
+  //     required VoidCallback? onPressed}) {
+  //   return FutureBuilder(
+  //       future: ApiService().getData(title == 'กิจกรรมใกล้ฉัน'
+  //           ? '/events/nearby'
+  //           : '/events/interested'),
+  //       builder: (context, data) {
+  //         if (data.connectionState == ConnectionState.waiting) {
+  //           //Future: change to ==
+  //           return Container(
+  //             //Future: do the rest
+  //             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+  //             child: Column(
+  //               children: [
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Text(title),
+  //                     IconButton(
+  //                         icon: const Icon(
+  //                           Icons.arrow_forward_ios,
+  //                           size: 20,
+  //                         ),
+  //                         onPressed: onPressed)
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 10),
+  //                 Container(
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(15),
+  //                     color: Colors.grey[200],
+  //                     boxShadow: [
+  //                       BoxShadow(
+  //                         color: Colors.grey.withOpacity(0.2),
+  //                         spreadRadius: 0,
+  //                         blurRadius: 3,
+  //                         offset: const Offset(0, 3),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   height: 330,
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         } else {
+  //           return Container(
+  //             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+  //             child: Column(
+  //               children: [
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Text(title),
+  //                     IconButton(
+  //                         icon: const Icon(
+  //                           Icons.arrow_forward_ios,
+  //                           size: 20,
+  //                         ),
+  //                         onPressed: onPressed)
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 10),
+  //                 Stack(
+  //                   children: [
+  //                     Container(
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(15),
+  //                         boxShadow: [
+  //                           BoxShadow(
+  //                             color: Colors.grey.withOpacity(0.2),
+  //                             spreadRadius: 0,
+  //                             blurRadius: 3,
+  //                             offset: const Offset(0, 3),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       height: 330,
+  //                       child: PageView.builder(
+  //                           itemBuilder: (context, index) {
+  //                             Event event = events.events[index];
+  //                             return EventItem(event: event);
+  //                           },
+  //                           controller: controller,
+  //                           itemCount: events.events.length),
+  //                     ),
+  //                     Positioned(
+  //                         bottom: 10,
+  //                         left: 0,
+  //                         right: 0,
+  //                         child: Center(
+  //                           child: SmoothPageIndicator(
+  //                             controller: controller,
+  //                             count: events.events.length,
+  //                             effect: ExpandingDotsEffect(
+  //                               dotWidth: 10,
+  //                               dotHeight: 10,
+  //                               activeDotColor: const Color(0xFF02BC77),
+  //                               dotColor: Colors.grey[300]!,
+  //                             ),
+  //                           ),
+  //                         ))
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         }
+  //       });
+  // }
 }

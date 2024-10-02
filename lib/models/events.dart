@@ -23,7 +23,7 @@ class Events {
 
     Random random = Random();
 
-    List<Event> events = List.generate(10, (index) {
+    List<Event> events = List.generate(50, (index) {
       return Event(
         name: 'ร้องเพลงในสวนรถไฟ "มาทำลิสต์เพลง ของพวกเรากันเถอะ" ${index + 1}',
         location:
@@ -34,7 +34,7 @@ class Events {
         startTime: DateTime.now().add(Duration(hours: random.nextInt(24))),
         attendeeLimit: random.nextInt(100) +
             10, // Random attendee limit between 10 and 100
-        willGoAttendees: random.nextInt(50),
+        willGoAttendees: random.nextInt(50) + 1,
         interestedAttendees: random.nextInt(100),
         attendees: [
           for (int i = 0; i < random.nextInt(100); i++)

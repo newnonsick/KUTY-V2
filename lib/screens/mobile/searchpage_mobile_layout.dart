@@ -262,6 +262,7 @@ class _SearchPageMobileLayoutState extends State<SearchPageMobileLayout> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSearchingItem(category: 'Events'),
+          _buildSearchingItem(category: 'Categories'),
           _buildSearchingItem(category: 'Locations'),
           _buildSearchingItem(category: 'People'),
         ],

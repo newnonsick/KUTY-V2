@@ -51,8 +51,19 @@ class _FilterCategoryState extends State<FilterCategory> {
     return GestureDetector(
       onTap: () {
         if (isSelected) {
-          widget.selectedCategories.remove(category);
+          if (category != 'All') {
+            widget.selectedCategories.remove(category);
+          }
+          if (widget.selectedCategories.isEmpty) {
+            widget.selectedCategories.add('All');
+          }
         } else {
+          if (widget.selectedCategories.contains('All')) {
+            widget.selectedCategories.remove('All');
+          }
+          if (category == 'All') {
+            widget.selectedCategories.clear();
+          }
           widget.selectedCategories.add(category);
         }
         widget.onSelectCategory(widget.selectedCategories);

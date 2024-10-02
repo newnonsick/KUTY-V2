@@ -46,7 +46,7 @@ class Event {
   }
 
   int getAttendeeCount() {
-    return attendees.length;
+    return willGoAttendees + interestedAttendees;
   }
 
   bool hasCost() {

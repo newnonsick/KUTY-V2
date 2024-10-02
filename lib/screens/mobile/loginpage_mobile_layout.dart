@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:ku_ty/services/authservice.dart';
 import 'package:ku_ty/utils/utils.dart';
 

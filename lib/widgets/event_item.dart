@@ -103,42 +103,44 @@ class EventItem extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundImage: AssetImage(
-                                "assets/images/Evil_Morty_Profile_Icon.png"),
-                          ),
-                          const SizedBox(width: 5),
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundImage: AssetImage(
-                                "assets/images/Evil_Morty_Profile_Icon.png"),
-                          ),
-                          const SizedBox(width: 5),
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundImage: AssetImage(
-                                "assets/images/Evil_Morty_Profile_Icon.png"),
-                          ),
-                          const SizedBox(width: 5),
-                          if (event.getAttendeeCount() - 3 > 0)
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Text(
-                                "${event.getAttendeeCount() - 3}+",
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.bold,
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundImage: AssetImage(
+                                  "assets/images/Evil_Morty_Profile_Icon.png"),
+                            ),
+                            const SizedBox(width: 5),
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundImage: AssetImage(
+                                  "assets/images/Evil_Morty_Profile_Icon.png"),
+                            ),
+                            const SizedBox(width: 5),
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundImage: AssetImage(
+                                  "assets/images/Evil_Morty_Profile_Icon.png"),
+                            ),
+                            const SizedBox(width: 5),
+                            if (event.getAttendeeCount() - 3 > 0)
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text(
+                                  "${event.getAttendeeCount() - 3}+",
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
                       FittedBox(
