@@ -5,6 +5,8 @@ import 'package:ku_ty/models/event.dart';
 import 'package:ku_ty/models/events.dart';
 import 'package:ku_ty/widgets/event_item.dart';
 import 'package:ku_ty/widgets/filter_category.dart';
+import 'package:ku_ty/widgets/filter_sheet.dart';
+import 'package:ku_ty/widgets/makedismissable.dart';
 // import 'package:ku_ty/services/apiservice.dart';
 // import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -19,8 +21,12 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   String searchResult = '';
-  List<String> filterasEventCategory = ["All"];
   Events events = Events();
+  List<String> filterasEventCategory = ['All'];
+  Map<String, dynamic> filters = {
+    'price': '',
+    'filterasEventCategory': ["All"],
+  };
   // final PageController _pageViewController = PageController();
   // final PageController _pageViewController2 = PageController();
 
@@ -36,6 +42,7 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
     setState(() {
       _scrollController.jumpTo(0);
       filterasEventCategory = value;
+      filters['filterasEventCategory'] = value;
     });
   }
 
@@ -68,7 +75,7 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
             Event event = filteredEvents[index];
             return Container(
                 margin: const EdgeInsets.only(bottom: 20),
-              child: EventItem(event: event));
+                child: EventItem(event: event));
           },
         ),
       ),
@@ -224,7 +231,11 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
         children: [
           InkWell(
             onTap: () {
-              print('Filter');
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => _buildFilterSheet());
             },
             child: const Row(
               children: [
@@ -249,6 +260,24 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
         ],
       ),
     );
+  }
+
+  Widget _buildFilterSheet() {
+    return MakeDismissible(
+        child: DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            minChildSize: 0.2,
+            maxChildSize: 0.6,
+            builder: (_, controllers) => FilterSheet(
+                  controller: controllers,
+                  filters: filters,
+                  onApply: (value) {
+                    setState(() {
+                      filters = value;
+                      filterasEventCategory = filters['filterasEventCategory'];
+                    });
+                  },
+                )));
   }
 
   // Widget _buildEventGroup(

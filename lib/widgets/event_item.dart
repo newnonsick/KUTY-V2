@@ -74,16 +74,13 @@ class EventItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 65,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            event.description,
-                            style: const TextStyle(fontSize: 16),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                          ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          event.description,
+                          style: const TextStyle(fontSize: 16),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
                         ),
                       ),
                       const SizedBox(height: 10),

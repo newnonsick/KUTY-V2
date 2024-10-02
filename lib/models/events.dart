@@ -24,12 +24,17 @@ class Events {
     Random random = Random();
 
     List<Event> events = List.generate(50, (index) {
+      String description = '';
+      for (int i = 0; i < ( random.nextInt(40) + 10); i++) {
+        description += 'บลา';
+      }
+
       return Event(
         name: 'ร้องเพลงในสวนรถไฟ "มาทำลิสต์เพลง ของพวกเรากันเถอะ" ${index + 1}',
         location:
             'Wachirabenchathat Park (Rot Fai Park) ${random.nextInt(100)}',
         description:
-            'บลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลาบลา ${index + 1}',
+            description,
         startDate: DateTime.now().add(Duration(days: random.nextInt(30))),
         startTime: DateTime.now().add(Duration(hours: random.nextInt(24))),
         attendeeLimit: random.nextInt(100) +

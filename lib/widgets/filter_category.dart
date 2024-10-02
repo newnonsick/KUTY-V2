@@ -45,7 +45,7 @@ class _FilterCategoryState extends State<FilterCategory> {
     );
   }
 
-  Widget filterCategoryItem({required String category, required String emoji}) {
+  Widget filterCategoryItem({required String category, required String emoji,}) {
     bool isSelected = widget.selectedCategories.contains(category);
 
     return GestureDetector(
