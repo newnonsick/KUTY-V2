@@ -32,6 +32,7 @@ class _FilterSheetState extends State<FilterSheet> {
       'filterasEventCategory': newSelectedCategories,
       'price': newSelectedPrice
     });
+
     Get.back();
   }
 
@@ -184,6 +185,7 @@ class _FilterSheetState extends State<FilterSheet> {
   }
 
   Widget filterPriceItem({required String price}) {
+    if (newSelectedPrice == '0') newSelectedPrice = 'Free';
     bool isSelected = newSelectedPrice == price;
     return InkWell(
       onTap: () {
@@ -191,7 +193,7 @@ class _FilterSheetState extends State<FilterSheet> {
           if (isSelected) {
             newSelectedPrice = '';
           } else {
-            newSelectedPrice = price;
+            newSelectedPrice = (price == 'Free' ? '0' : price);
           }
         });
       },

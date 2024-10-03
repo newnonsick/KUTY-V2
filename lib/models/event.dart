@@ -15,6 +15,7 @@ class Event {
   List<String> categories;
   int willGoAttendees;
   int interestedAttendees;
+  double distance;
 
   Event({
     required this.name,
@@ -31,6 +32,7 @@ class Event {
     required this.categories,
     required this.willGoAttendees,
     required this.interestedAttendees,
+    required this.distance,
   });
 
   void addAttendee(Map attendee) {

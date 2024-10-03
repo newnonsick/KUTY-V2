@@ -7,6 +7,7 @@ import 'package:ku_ty/widgets/event_item.dart';
 import 'package:ku_ty/widgets/filter_category.dart';
 import 'package:ku_ty/widgets/filter_sheet.dart';
 import 'package:ku_ty/widgets/makedismissable.dart';
+import 'package:ku_ty/widgets/sortby_sheet.dart';
 // import 'package:ku_ty/services/apiservice.dart';
 // import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -22,10 +23,13 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   final ScrollController _scrollController = ScrollController();
   String searchResult = '';
   Events events = Events();
-  List<String> filterasEventCategory = ['All'];
   Map<String, dynamic> filters = {
     'price': '',
     'filterasEventCategory': ["All"],
+  };
+  Map<String, String> sortBy = {
+    'sortBy': '',
+    'mode': 'Ascending', // Ascending, Descending
   };
   // final PageController _pageViewController = PageController();
   // final PageController _pageViewController2 = PageController();
@@ -41,7 +45,6 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   void onSelectCategory(List<String> value) {
     setState(() {
       _scrollController.jumpTo(0);
-      filterasEventCategory = value;
       filters['filterasEventCategory'] = value;
     });
   }
@@ -63,8 +66,8 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   //   );
   // }
 
-  Widget _buildSelectedCategory({required List<String> selectedCategories}) {
-    List<Event> filteredEvents = events.getEventsByCategory(selectedCategories);
+  Widget _buildEvents() {
+    List<Event> filteredEvents = events.getEventsByFilterNSort(filters, sortBy);
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -93,7 +96,7 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: const Text('KU-TY',
+        title: const Text('KU-TY v.2',
             style: TextStyle(
                 color: Color(0xFF02BC77),
                 fontWeight: FontWeight.bold,
@@ -126,7 +129,8 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
             const SizedBox(height: 15),
             _buildFilterNSort(),
             const SizedBox(height: 20),
-            _buildSelectedCategory(selectedCategories: filterasEventCategory),
+            // _buildSelectedCategory(selectedCategories: filters['filterasEventCategory']),
+            _buildEvents(),
             // Expanded(
             //   child: SingleChildScrollView(
             //     controller: _scrollController,
@@ -218,7 +222,7 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
 
   Widget _buildFilterCatagory() {
     return FilterCategory(
-      selectedCategories: filterasEventCategory,
+      selectedCategories: filters['filterasEventCategory'],
       onSelectCategory: onSelectCategory,
     );
   }
@@ -237,23 +241,95 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
                   context: context,
                   builder: (context) => _buildFilterSheet());
             },
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.filter_alt_outlined, size: 20),
-                SizedBox(width: 5),
-                Text('Filter'),
+                const Icon(Icons.filter_alt_outlined, size: 20),
+                const SizedBox(width: 5),
+                const Text('Filter'),
+                const SizedBox(width: 10),
+                if (filters['price'] != '')
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: const Color(0xFF02BC77),
+                        ),
+                        color: const Color.fromARGB(49, 0, 212, 135),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${filters['price'] != '' ? filters['price'] : ''}',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 160, 101),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 5),
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  filters['price'] = '';
+                                });
+                              },
+                              child: const Icon(Icons.close,
+                                  size: 15, color: Color(0xFF02BC77))),
+                        ],
+                      ))
               ],
             ),
           ),
           InkWell(
             onTap: () {
-              print('Sort');
+              showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => _buildSortBySheet());
             },
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.sort, size: 20),
-                SizedBox(width: 5),
-                Text('Sort'),
+                if (sortBy['sortBy'] != '')
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: const Color(0xFF02BC77),
+                        ),
+                        color: const Color.fromARGB(49, 0, 212, 135),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            sortBy['mode'] == 'Ascending'
+                                ? Icons.arrow_downward
+                                : Icons.arrow_upward,
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${sortBy['sortBy'] != '' ? sortBy['sortBy'] : ''}',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 160, 101),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 5),
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  sortBy['sortBy'] = '';
+                                  sortBy['mode'] = 'Ascending';
+                                });
+                              },
+                              child: const Icon(Icons.close,
+                                  size: 15, color: Color(0xFF02BC77))),
+                        ],
+                      )),
+                const SizedBox(width: 10),
+                const Icon(Icons.sort, size: 20),
+                const SizedBox(width: 5),
+                const Text('Sort'),
               ],
             ),
           ),
@@ -267,14 +343,30 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
         child: DraggableScrollableSheet(
             initialChildSize: 0.6,
             minChildSize: 0.2,
-            maxChildSize: 0.6,
+            maxChildSize: 0.65,
             builder: (_, controllers) => FilterSheet(
                   controller: controllers,
                   filters: filters,
                   onApply: (value) {
                     setState(() {
                       filters = value;
-                      filterasEventCategory = filters['filterasEventCategory'];
+                    });
+                  },
+                )));
+  }
+
+  Widget _buildSortBySheet() {
+    return MakeDismissible(
+        child: DraggableScrollableSheet(
+            initialChildSize: 0.5,
+            minChildSize: 0.2,
+            maxChildSize: 0.55,
+            builder: (_, controllers) => SortBySheet(
+                  controller: controllers,
+                  sortBy: sortBy,
+                  onApply: (value) {
+                    setState(() {
+                      sortBy = value;
                     });
                   },
                 )));
