@@ -133,12 +133,7 @@ class Events {
       });
     } else if (sortBy['sortBy']  == 'Distance') {
       filteredEvents.sort((a, b) => a.distance.compareTo(b.distance));
-    } else if (sortBy['sortBy'] == 'Recommended') {
-      filteredEvents.sort((a, b) {
-        //mock ramdom sort events
-        return Random().nextInt(3) - 1;
-      });
-    } else if (sortBy['sortBy'] == '')
+    }  else if (sortBy['sortBy'] == '')
     {
       filteredEvents = events;
     }

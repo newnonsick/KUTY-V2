@@ -117,8 +117,6 @@ class _SortBySheetState extends State<SortBySheet> {
             _buildSortByItem(sortBy: 'Price'),
             const SizedBox(height: 10),
             _buildSortByItem(sortBy: 'Distance'),
-            const SizedBox(height: 10),
-            _buildSortByItem(sortBy: 'Recommended'),
           ])),
           Row(
             children: [

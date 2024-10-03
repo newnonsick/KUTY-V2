@@ -357,7 +357,7 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   }
 
   Widget _buildSortBySheet() {
-    double initSize = 476 / MediaQuery.of(context).size.height;
+    double initSize = 420 / MediaQuery.of(context).size.height;
     return MakeDismissible(
         child: DraggableScrollableSheet(
             initialChildSize: initSize > 1 ? 1 : initSize,
