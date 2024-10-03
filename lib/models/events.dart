@@ -80,7 +80,7 @@ class Events {
     //   'mode': 'Ascending', // Ascending, Descending
     // };
 
-    List<Event> filteredEvents = events;
+    List<Event> filteredEvents = [...events];
 
     if (filter['price'] != '') {
       filteredEvents = filteredEvents.where((event) {
@@ -133,6 +133,14 @@ class Events {
       });
     } else if (sortBy['sortBy']  == 'Distance') {
       filteredEvents.sort((a, b) => a.distance.compareTo(b.distance));
+    } else if (sortBy['sortBy'] == 'Recommended') {
+      filteredEvents.sort((a, b) {
+        //mock ramdom sort events
+        return Random().nextInt(3) - 1;
+      });
+    } else if (sortBy['sortBy'] == '')
+    {
+      filteredEvents = events;
     }
 
     if (sortBy['mode'] == 'Descending') {

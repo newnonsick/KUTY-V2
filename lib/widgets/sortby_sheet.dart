@@ -117,6 +117,8 @@ class _SortBySheetState extends State<SortBySheet> {
             _buildSortByItem(sortBy: 'Price'),
             const SizedBox(height: 10),
             _buildSortByItem(sortBy: 'Distance'),
+            const SizedBox(height: 10),
+            _buildSortByItem(sortBy: 'Recommended'),
           ])),
           Row(
             children: [
@@ -204,7 +206,7 @@ class _SortBySheetState extends State<SortBySheet> {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  sortBy,
+                  sortBy == "DateTime" ? "Event Date & Time" : sortBy,
                   style: TextStyle(
                       color:
                           isSelected ? const Color(0xFF02BC77) : Colors.black,

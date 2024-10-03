@@ -339,11 +339,12 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   }
 
   Widget _buildFilterSheet() {
+    double initSize = 500 / MediaQuery.of(context).size.height;
     return MakeDismissible(
         child: DraggableScrollableSheet(
-            initialChildSize: 0.6,
+            initialChildSize: initSize > 1 ? 1 : initSize,
             minChildSize: 0.2,
-            maxChildSize: 0.65,
+            maxChildSize: initSize > 1 ? 1 : initSize,
             builder: (_, controllers) => FilterSheet(
                   controller: controllers,
                   filters: filters,
@@ -356,11 +357,12 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
   }
 
   Widget _buildSortBySheet() {
+    double initSize = 476 / MediaQuery.of(context).size.height;
     return MakeDismissible(
         child: DraggableScrollableSheet(
-            initialChildSize: 0.5,
+            initialChildSize: initSize > 1 ? 1 : initSize,
             minChildSize: 0.2,
-            maxChildSize: 0.55,
+            maxChildSize: initSize,
             builder: (_, controllers) => SortBySheet(
                   controller: controllers,
                   sortBy: sortBy,
