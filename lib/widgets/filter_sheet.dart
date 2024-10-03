@@ -23,7 +23,7 @@ class _FilterSheetState extends State<FilterSheet> {
   @override
   void initState() {
     super.initState();
-    newSelectedCategories = widget.filters['filterasEventCategory'];
+    newSelectedCategories = [...widget.filters['filterasEventCategory']];
     newSelectedPrice = widget.filters['price'];
   }
 
