@@ -80149,7 +80149,7 @@ r=A.a6(new A.aK(r,new A.a1P(a),p),!0,p.i("l.E"))}if(J.d(b.h(0,q),"DateTime"))B.b
 else if(J.d(b.h(0,q),"Attendees"))B.b.es(r,new A.a1R())
 else if(J.d(b.h(0,q),"Price"))B.b.es(r,new A.a1S())
 else if(J.d(b.h(0,q),"Distance"))B.b.es(r,new A.a1T())
-else if(J.d(b.h(0,q),""))r=this.a
+else J.d(b.h(0,q),"")
 if(J.d(b.h(0,"mode"),"Descending")){p=A.Z(r).i("c7<1>")
 r=A.a6(new A.c7(r,p),!0,p.i("aN.E"))}return r}}
 A.a1U.prototype={

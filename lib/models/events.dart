@@ -135,7 +135,7 @@ class Events {
       filteredEvents.sort((a, b) => a.distance.compareTo(b.distance));
     }  else if (sortBy['sortBy'] == '')
     {
-      filteredEvents = events;
+      filteredEvents = filteredEvents;
     }
 
     if (sortBy['mode'] == 'Descending') {
