@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ku_ty/screens/mobile/accountpage_mobile_layout.dart';
 import 'package:ku_ty/screens/mobile/chatpage_mobile_layout.dart';
 import 'package:ku_ty/screens/mobile/homepage_mobile_layout.dart';
-import 'package:ku_ty/screens/mobile/myactivitiespage_mobile_layout.dart';
+import 'package:ku_ty/screens/mobile/myeventspage_mobile_layout.dart';
 import 'package:ku_ty/widgets/custom_navigationbar.dart';
 
 class MyHomePageMobileLayout extends StatefulWidget {
@@ -18,7 +18,7 @@ class _MyHomePageMobileLayoutState extends State<MyHomePageMobileLayout> {
 
   final List<Widget> _pages = [
     const HomePageMobileLayout(),
-    const MyActivitiesPageMobileLayout(),
+    const MyEventsPageMobileLayout(),
     const ChatPageMobileLayout(),
     const AccountPageMobileLayout(),
   ];

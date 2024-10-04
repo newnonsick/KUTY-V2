@@ -10,7 +10,7 @@ class EventItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("Event Item Clicked");
+        print(event.id);
       },
       child: Container(
         padding: const EdgeInsets.all(15),

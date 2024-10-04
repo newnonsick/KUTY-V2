@@ -30,7 +30,8 @@ class Events {
       }
 
       return Event(
-        name: 'ร้องเพลงในสวนรถไฟ "มาทำลิสต์เพลง ของพวกเรากันเถอะ" ${index + 1}',
+        id: index,
+        name: "ร้องเพลงในสวนรถไฟ \"มาทำลิสต์เพลง ของพวกเรากันเถอะ\" ${index + 1}",
         location:
             'Wachirabenchathat Park (Rot Fai Park) ${random.nextInt(100)}',
         description:

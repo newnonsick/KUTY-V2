@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 class Event {
+  int id;
   String name;
   String description;
   String location;
@@ -18,6 +19,7 @@ class Event {
   double distance;
 
   Event({
+    required this.id,
     required this.name,
     required this.description,
     required this.location,
