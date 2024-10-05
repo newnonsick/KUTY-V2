@@ -36,8 +36,7 @@ class Events {
             'Wachirabenchathat Park (Rot Fai Park) ${random.nextInt(100)}',
         description:
             description,
-        startDate: DateTime.now().add(Duration(days: random.nextInt(30))),
-        startTime: DateTime.now().add(Duration(hours: random.nextInt(24))),
+        startDateTime: DateTime.now().add(Duration(days: random.nextInt(30))),
         attendeeLimit: random.nextInt(100) +
             10, // Random attendee limit between 10 and 100
         willGoAttendees: random.nextInt(50) + 1,
@@ -111,10 +110,7 @@ class Events {
 
     if (sortBy['sortBy'] == 'DateTime') {
       filteredEvents.sort((a, b) {
-        if (a.startDate.compareTo(b.startDate) == 0) {
-          return a.startTime.compareTo(b.startTime);
-        }
-        return a.startDate.compareTo(b.startDate);
+        return a.startDateTime.compareTo(b.startDateTime);
       });
 
 

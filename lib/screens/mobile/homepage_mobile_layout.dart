@@ -149,7 +149,13 @@ class _HomePageMobileLayoutState extends State<HomePageMobileLayout> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.toNamed('/create-event')!.then((value) {
+            if (mounted) {
+              setState(() {});
+            }
+          });
+        },
         backgroundColor: const Color(0xFF02BC77),
         child: const Icon(Icons.add, color: Color.fromRGBO(203, 241, 227, 1)),
       ),

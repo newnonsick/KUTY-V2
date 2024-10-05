@@ -91,7 +91,7 @@ class EventItem extends StatelessWidget {
                             const Icon(Icons.calendar_today_outlined, size: 17),
                             const SizedBox(width: 5),
                             Text(
-                              "${event.getFormattedDate(event.startDate)}, ${event.getFormattedTime(event.startTime)}",
+                              getFormattedDateTime(event.startDateTime),
                               style: TextStyle(
                                   color: Colors.grey[500],
                                   fontWeight: FontWeight.bold),
@@ -123,7 +123,8 @@ class EventItem extends StatelessWidget {
                             const SizedBox(width: 5),
                             if (event.getAttendeeCount() - 3 > 0)
                               Container(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(15),

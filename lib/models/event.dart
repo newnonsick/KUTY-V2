@@ -1,13 +1,10 @@
-import 'package:intl/intl.dart';
-
 class Event {
   int id;
   String name;
   String description;
   String location;
-  DateTime startDate;
+  DateTime startDateTime;
   DateTime? endDate;
-  DateTime startTime;
   DateTime? endTime;
   List<Map> attendees;
   List<String> images;
@@ -23,9 +20,8 @@ class Event {
     required this.name,
     required this.description,
     required this.location,
-    required this.startDate,
+    required this.startDateTime,
     this.endDate,
-    required this.startTime,
     this.endTime,
     required this.attendees,
     required this.images,
@@ -57,13 +53,5 @@ class Event {
     return cost != null && cost! > 0;
   }
 
-  String getFormattedDate(DateTime date) {
-    DateFormat formatter = DateFormat('EEE, dd MMM yyyy');
-    return formatter.format(date);
-  }
 
-  String getFormattedTime(DateTime time) {
-    DateFormat timeFormatter = DateFormat('hh:mm a');
-    return timeFormatter.format(time);
-  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ku_ty/screens/mobile/createeventpage_mobile_layout.dart';
 import 'package:ku_ty/screens/mobile/loginpage_mobile_layout.dart';
 import 'package:ku_ty/screens/mobile/searchpage_mobile_layout.dart';
 import 'package:ku_ty/screens/myhomepage.dart';
@@ -38,6 +39,21 @@ class _MyAppState extends State<MyApp> {
               if (AuthService.checkIsLoggedIn()) {
                 return const ResponsiveLayout(
                     mobile: SearchPageMobileLayout(),
+                    tablet: MyHomePageTabletLayout());
+              } else {
+                return const ResponsiveLayout(
+                    mobile: LoginPageMobileLayout(),
+                    tablet: MyHomePageTabletLayout());
+              }
+            },
+            transition: Transition.rightToLeft,
+            transitionDuration: const Duration(milliseconds: 300)),
+        GetPage(
+            name: '/create-event',
+            page: () {
+              if (AuthService.checkIsLoggedIn()) {
+                return const ResponsiveLayout(
+                    mobile: CreateEventPageMobileLayout(),
                     tablet: MyHomePageTabletLayout());
               } else {
                 return const ResponsiveLayout(

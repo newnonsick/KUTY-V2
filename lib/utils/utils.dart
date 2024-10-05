@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 
 String encrypt(String message) {
@@ -37,4 +39,10 @@ String getCategoryEmoji(String category) {
     default:
       return '🌍';
   }
+}
+
+
+String getFormattedDateTime(DateTime datetime) {
+  DateFormat formatter = DateFormat('EEE, dd MMM yyyy, hh:mm a');
+  return formatter.format(datetime);
 }
