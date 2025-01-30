@@ -55,7 +55,7 @@ class EventItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    event.location,
+                    event.locationName,
                     overflow: TextOverflow.fade,
                     maxLines: 1,
                     style: TextStyle(

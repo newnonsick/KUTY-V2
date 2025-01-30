@@ -183,20 +183,26 @@ class _CreateEventPageMobileLayoutState
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF02BC77),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                child: SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF02BC77),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text("Create"),
                     ),
                   ),
-                  onPressed: () {},
-                  child: const Text("Create"),
                 ),
               ),
             ],

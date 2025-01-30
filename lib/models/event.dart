@@ -2,10 +2,11 @@ class Event {
   int id;
   String name;
   String description;
-  String location;
+  String locationName;
+  double latitude;
+  double longitude;
   DateTime startDateTime;
-  DateTime? endDate;
-  DateTime? endTime;
+  DateTime? endDateTime;
   List<Map> attendees;
   List<String> images;
   int attendeeLimit;
@@ -19,10 +20,11 @@ class Event {
     required this.id,
     required this.name,
     required this.description,
-    required this.location,
+    required this.locationName,
+    required this.latitude,
+    required this.longitude,
     required this.startDateTime,
-    this.endDate,
-    this.endTime,
+    this.endDateTime,
     required this.attendees,
     required this.images,
     required this.attendeeLimit,

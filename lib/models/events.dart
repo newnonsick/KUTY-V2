@@ -32,8 +32,10 @@ class Events {
       return Event(
         id: index,
         name: "ร้องเพลงในสวนรถไฟ \"มาทำลิสต์เพลง ของพวกเรากันเถอะ\" ${index + 1}",
-        location:
+        locationName:
             'Wachirabenchathat Park (Rot Fai Park) ${random.nextInt(100)}',
+        latitude: 13.7934 + random.nextDouble(),
+        longitude: 100.5686 + random.nextDouble(),
         description:
             description,
         startDateTime: DateTime.now().add(Duration(days: random.nextInt(30))),
